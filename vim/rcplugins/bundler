@@ -1,0 +1,5 @@
+" Lightweight support for Ruby's Bundler.
+
+Plug 'tpope/vim-bundler'
+
+" vim:ft=vim

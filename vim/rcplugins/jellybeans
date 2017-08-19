@@ -1,0 +1,5 @@
+" A colorful, dark color scheme for Vim.
+
+Plug 'nanotech/jellybeans.vim', { 'tag': 'v1.6' }
+
+" vim:ft=vim

@@ -1,0 +1,5 @@
+" Automatically create any non-existent directories before writing the buffer.
+
+Plug 'pbrisbin/vim-mkdir'
+
+" vim:ft=vim
