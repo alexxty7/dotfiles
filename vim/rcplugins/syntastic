@@ -1,5 +1,0 @@
-" Syntax checking hacks for vim
-
-Plug 'scrooloose/syntastic'
-
-" vim:ft=vim

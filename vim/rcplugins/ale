@@ -1,0 +1,9 @@
+" Plugin for providing linting in NeoVim and Vim 8 while you edit your text files.
+
+Plug 'w0rp/ale'
+
+" Move between linting errors
+nnoremap ]r :ALENextWrap<CR>
+nnoremap [r :ALEPreviousWrap<CR>
+
+" vim:ft=vim
