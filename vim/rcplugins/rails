@@ -1,5 +1,0 @@
-" Vim plugin for editing Ruby on Rails applications.
-
-Plug 'tpope/vim-rails'
-
-" vim:ft=vim

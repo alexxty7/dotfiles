@@ -1,5 +1,0 @@
-" An extensible & universal comment plugin that also handles embedded filetypes
-
-Plug 'vim-scripts/tComment'
-
-" vim:ft=vim

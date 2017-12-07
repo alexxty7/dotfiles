@@ -1,5 +1,0 @@
-" Rake.vim is a plugin leveraging projectionist.vim to enable you to use all those parts of rails.vim
-
-Plug 'tpope/vim-rake'
-
-" vim:ft=vim

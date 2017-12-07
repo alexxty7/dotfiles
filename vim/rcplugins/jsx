@@ -1,5 +1,0 @@
-" React JSX syntax highlighting and indenting for vim.
-
-Plug 'mxw/vim-jsx'
-
-" vim:ft=vim

@@ -1,5 +1,0 @@
-" Vim plugin to run shell commands in an interactive shell
-
-Plug 'christoomey/vim-run-interactive'
-
-" vim:ft=vim

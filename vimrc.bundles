@@ -1,0 +1,101 @@
+if &compatible
+  set nocompatible
+end
+
+" Remove declared plugins
+function! s:UnPlug(plug_name)
+  if has_key(g:plugs, a:plug_name)
+    call remove(g:plugs, a:plug_name)
+  endif
+endfunction
+command!  -nargs=1 UnPlug call s:UnPlug(<args>)
+
+call plug#begin('~/.vim/bundle')
+
+" Define bundles via Github repos
+Plug 'w0rp/ale'
+Plug 'christoomey/vim-run-interactive'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'elixir-lang/vim-elixir'
+Plug 'fatih/vim-go'
+Plug 'janko-m/vim-test'
+Plug 'kchmck/vim-coffee-script'
+Plug 'pangloss/vim-javascript'
+Plug 'pbrisbin/vim-mkdir'
+Plug 'slim-template/vim-slim'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
+Plug 'vim-ruby/vim-ruby'
+Plug 'vim-scripts/tComment'
+
+" Status/tabline for vim
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" fzf is a general-purpose command-line fuzzy finder.
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+" A Vim plugin which shows a git diff in the gutter
+Plug 'airblade/vim-gitgutter'
+
+" A tree explorer plugin for vim.
+Plug 'scrooloose/nerdtree'
+
+Plug 'mhinz/vim-startify'
+" vim:ft=vim
+
+" Vim Tmux Navigator - Seamlessly navigate between vim splits and tmux panes
+Plug 'christoomey/vim-tmux-navigator'
+
+" Vim Tmux Runner - Connect Vim and tmux to allow running lines & commands
+Plug 'christoomey/vim-tmux-runner'
+
+Plug 'sheerun/vim-polyglot'
+Plug 'bling/vim-bufferline'
+Plug 'trevordmiller/nova-vim'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'othree/html5.vim'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'mxw/vim-jsx'
+
+" Deoplete stuff
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+
+Plug 'ervandew/supertab'
+Plug 'jiangmiao/auto-pairs'
+Plug 'alvan/vim-closetag'
+
+" add this line to your .vimrc file
+Plug 'mattn/emmet-vim'
+
+call plug#end()
+
+let g:jsx_ext_required = 0
+
+nnoremap <leader>vo :VtrOpenRunner<cr>
+nnoremap <leader>va :VtrAttachToPane<cr>
+nnoremap <leader>fr :VtrFocusRunner<cr>
+nnoremap <leader>q :VtrSendCommandToRunner q<cr>
+
+noremap <C-f> :VtrSendLinesToRunner<cr>
+
+" Use deoplete.
+" let g:deoplete#enable_at_startup = 1
+
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline_theme='distinguished'

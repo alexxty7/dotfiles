@@ -1,5 +1,0 @@
-" fzf is a general-purpose command-line fuzzy finder.
-
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" vim:ft=vim
