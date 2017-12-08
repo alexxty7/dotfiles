@@ -139,3 +139,32 @@ set complete+=kspell
 set diffopt+=vertical
 
 colorscheme nova
+
+let g:jsx_ext_required = 0
+
+nnoremap <leader>vo :VtrOpenRunner<cr>
+nnoremap <leader>va :VtrAttachToPane<cr>
+nnoremap <leader>fr :VtrFocusRunner<cr>
+nnoremap <leader>q :VtrSendCommandToRunner q<cr>
+
+noremap <C-f> :VtrSendLinesToRunner<cr>
+
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Airline Stuff
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline_theme='distinguished'
+
+let g:deoplete#enable_at_startup = 1
+
+" UltiSnips configuration.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" minpac commands:
+command! PackUpdate call minpac#update()
+command! PackClean call minpac#clean()
