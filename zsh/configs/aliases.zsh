@@ -16,3 +16,6 @@ alias rs='rails s'
 
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
+
+# Refer neovim as vi
+alias vi='nvim'

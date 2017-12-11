@@ -11,6 +11,7 @@ set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
 set laststatus=2  " Always display the status line
 set autowrite     " Automatically :write before running commands
+set mouse=a
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -96,6 +97,19 @@ set colorcolumn=+1
 set number
 set numberwidth=5
 
+" set linenumbers on by default
+" When in insert mode, show linear numbers
+" When not in insert mode, show current line number with relative numbers
+" And last of all, only be relative in the buffer we're editing.
+
+au InsertLeave * set number
+au InsertLeave * set relativenumber
+
+au InsertLeave * set number
+au InsertEnter * set norelativenumber
+au BufLeave,FocusLost,WinLeave * set norelativenumber
+au BufEnter,FocusGained,WinEnter * set relativenumber
+
 " Switch between the last two files
 nnoremap <Leader><Leader> <c-^>
 
@@ -115,6 +129,9 @@ nnoremap <silent> <Leader>gt :TestVisit<CR>
 " Run commands that require an interactive shell
 nnoremap <Leader>r :RunInInteractiveShell<space>
 
+"This unsets the "last search pattern" register by hitting return
+nnoremap <CR> :noh<CR><CR>
+
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
@@ -128,6 +145,12 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
+" Map Ctrl+e to end of line in insert mode
+inoremap <C-e> <C-o>$
+
+" Map Ctrl+a to beginning of line in insert mode
+inoremap <C-a> <C-o>0
+
 " Move between linting errors
 nnoremap ]r :ALENextWrap<CR>
 nnoremap [r :ALEPreviousWrap<CR>
@@ -137,8 +160,6 @@ set complete+=kspell
 
 " Always use vertical diffs
 set diffopt+=vertical
-
-colorscheme nova
 
 let g:jsx_ext_required = 0
 
@@ -156,7 +177,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#bufferline#enabled = 1
+
+" Airline theme
 let g:airline_theme='distinguished'
+" let g:airline_theme='oceanicnext'
 
 let g:deoplete#enable_at_startup = 1
 
@@ -168,3 +192,8 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " minpac commands:
 command! PackUpdate call minpac#update()
 command! PackClean call minpac#clean()
+
+" Color schema
+" colorscheme OceanicNext
+
+colorscheme nova
