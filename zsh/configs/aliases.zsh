@@ -18,4 +18,4 @@ alias rs='rails s'
 alias path='echo $PATH | tr -s ":" "\n"'
 
 # Refer neovim as vi
-alias vi='nvim'
+alias ni='nvim'

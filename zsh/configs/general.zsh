@@ -1,5 +1,5 @@
 # General ZSH configurations
-export EDITOR="vim"
+export EDITOR="nvim"
 
 ## Command history configuration
 HISTFILE=~/.zhistory
