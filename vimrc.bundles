@@ -52,4 +52,4 @@ call minpac#add('honza/vim-snippets')
 
 call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
 call minpac#add('wincent/loupe')
-" call minpac#add('wincent/ferret')
+call minpac#add('wincent/ferret')
