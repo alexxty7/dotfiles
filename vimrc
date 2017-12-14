@@ -6,12 +6,19 @@ set nobackup
 set nowritebackup
 set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
 set history=50
+set hidden
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
 set laststatus=2  " Always display the status line
 set autowrite     " Automatically :write before running commands
-set mouse=a
+set lazyredraw    " Don't redraw screen when running macros.
+
+" (Hopefully) removes the delay when hitting esc in insert mode
+set noesckeys
+set ttimeout
+set ttimeoutlen=1
+set ttyfast
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -32,28 +39,24 @@ filetype plugin indent on
 
 augroup vimrcEx
   autocmd!
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it for commit messages, when the position is invalid, or when
-  " inside an event handler (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
   " Set syntax highlighting for specific file types
-  autocmd BufRead,BufNewFile Appraisals set filetype=ruby
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 
-  " ALE linting events
-  set updatetime=1000
-  let g:ale_lint_on_text_changed = 0
-  autocmd CursorHold * call ale#Lint()
-  autocmd CursorHoldI * call ale#Lint()
-  autocmd InsertEnter * call ale#Lint()
-  autocmd InsertLeave * call ale#Lint()
+  "  remove whitespaces on save
+  autocmd BufWritePre * :%s/\s\+$//e
 
+  " ALE linting events
+  if g:has_async
+    set updatetime=1000
+    let g:ale_lint_on_text_changed = 0
+    autocmd CursorHold * call ale#Lint()
+    autocmd CursorHoldI * call ale#Lint()
+    autocmd InsertEnter * call ale#Lint()
+    autocmd InsertLeave * call ale#Lint()
+  else
+    echoerr "The thoughtbot dotfiles require NeoVim or Vim 8"
+  endif
 augroup END
 
 " When the type of shell script is /bin/sh, assume a POSIX-compatible
@@ -78,15 +81,12 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
+  let g:ctrlp_user_command = 'ag --literal --files-with-matches --nocolor --hidden -g "" %s'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
-
-  if !exists(":Ag")
-    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE>
-  endif
+  " Prefer `ag` over `rg`.
+  let g:FerretExecutable='ag,rg'
 endif
 
 " Make it obvious where 80 characters is
@@ -97,18 +97,20 @@ set colorcolumn=+1
 set number
 set numberwidth=5
 
-" set linenumbers on by default
-" When in insert mode, show linear numbers
-" When not in insert mode, show current line number with relative numbers
-" And last of all, only be relative in the buffer we're editing.
-
-au InsertLeave * set number
-au InsertLeave * set relativenumber
-
-au InsertLeave * set number
-au InsertEnter * set norelativenumber
-au BufLeave,FocusLost,WinLeave * set norelativenumber
-au BufEnter,FocusGained,WinEnter * set relativenumber
+" Tab completion
+" will insert tab at beginning of line,
+" will use completion if not at beginning
+set wildmode=list:longest,list:full
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <S-Tab> <c-n>
 
 " Switch between the last two files
 nnoremap <Leader><Leader> <c-^>
@@ -120,17 +122,14 @@ nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
 
 " vim-test mappings
-nnoremap <silent> <Leader>t :TestFile<CR>
-nnoremap <silent> <Leader>s :TestNearest<CR>
-nnoremap <silent> <Leader>l :TestLast<CR>
-nnoremap <silent> <Leader>a :TestSuite<CR>
-nnoremap <silent> <Leader>gt :TestVisit<CR>
+" nnoremap <silent> <Leader>t :TestFile<CR>
+" nnoremap <silent> <Leader>s :TestNearest<CR>
+" nnoremap <silent> <Leader>l :TestLast<CR>
+" nnoremap <silent> <Leader>a :TestSuite<CR>
+" nnoremap <silent> <Leader>gt :TestVisit<CR>
 
 " Run commands that require an interactive shell
 nnoremap <Leader>r :RunInInteractiveShell<space>
-
-"This unsets the "last search pattern" register by hitting return
-nnoremap <CR> :noh<CR><CR>
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -145,15 +144,13 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-" Map Ctrl+e to end of line in insert mode
-inoremap <C-e> <C-o>$
-
-" Map Ctrl+a to beginning of line in insert mode
-inoremap <C-a> <C-o>0
-
 " Move between linting errors
 nnoremap ]r :ALENextWrap<CR>
 nnoremap [r :ALEPreviousWrap<CR>
+
+" Set spellfile to location that is guaranteed to exist, can be symlinked to
+" Dropbox or kept in Git and managed outside of thoughtbot/dotfiles using rcm.
+set spellfile=$HOME/.vim-spell-en.utf-8.add
 
 " Autocomplete with dictionary words when spell check is on
 set complete+=kspell
@@ -161,39 +158,44 @@ set complete+=kspell
 " Always use vertical diffs
 set diffopt+=vertical
 
-let g:jsx_ext_required = 0
+" Colors
+colorscheme jellybeans
 
-nnoremap <leader>vo :VtrOpenRunner<cr>
-nnoremap <leader>va :VtrAttachToPane<cr>
-nnoremap <leader>fr :VtrFocusRunner<cr>
-nnoremap <leader>q :VtrSendCommandToRunner q<cr>
+" Git Gutter
+set signcolumn=yes
 
-noremap <C-f> :VtrSendLinesToRunner<cr>
+" Nerdtree
+let NERDTreeMapActivateNode='<right>'
+let NERDTreeShowHidden=1
+nmap <Leader>ft :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.DS_Store', '\~$', '\.swp']
 
-map <C-n> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" NerdCommenter configs
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
 
-" Airline Stuff
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#bufferline#enabled = 1
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
 
-" Airline theme
-let g:airline_theme='distinguished'
-" let g:airline_theme='oceanicnext'
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
 
-let g:deoplete#enable_at_startup = 1
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
 
-" UltiSnips configuration.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
 
-" minpac commands:
-command! PackUpdate call minpac#update()
-command! PackClean call minpac#clean()
-
-" Color schema
-" colorscheme OceanicNext
-
-colorscheme nova
+" RENAME CURRENT FILE (thanks Gary Bernhardt)
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <Leader>rn :call RenameFile()<cr>
+" Save file shortcut
+noremap <Leader>fs :update<CR>

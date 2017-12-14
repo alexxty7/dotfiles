@@ -1,6 +1,6 @@
 # General ZSH configurations
-export EDITOR="vim"
 
+export EDITOR="vim"
 ## Command history configuration
 HISTFILE=~/.zhistory
 HISTSIZE=20000

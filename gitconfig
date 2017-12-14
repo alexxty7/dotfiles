@@ -1,5 +1,3 @@
-[init]
-  templatedir = ~/.git_template
 [push]
   default = current
 [color]
@@ -18,10 +16,10 @@
 [core]
   excludesfile = ~/.gitignore
   autocrlf = input
-[merge]
-  ff = only
 [fetch]
   prune = true
+[commit]
+  template = ~/.gitmessage
 [user]
   name= Alexander Katulskiy
   email= alexxty7@gmail.com
