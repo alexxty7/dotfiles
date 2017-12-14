@@ -27,8 +27,6 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
-filetype plugin indent on
-
 augroup vimrcEx
   autocmd!
 
@@ -53,6 +51,15 @@ augroup vimrcEx
   autocmd InsertEnter * call ale#Lint()
   autocmd InsertLeave * call ale#Lint()
 
+  " When in insert mode, show linear numbers
+  " When not in insert mode, show current line number with relative numbers
+  " And last of all, only be relative in the buffer we're editing.
+  autocmd InsertLeave * set number
+  autocmd InsertLeave * set relativenumber
+  autocmd InsertLeave * set number
+  autocmd InsertEnter * set norelativenumber
+  autocmd BufLeave,FocusLost,WinLeave * set norelativenumber
+  autocmd BufEnter,FocusGained,WinEnter * set relativenumber
 augroup END
 
 " When the type of shell script is /bin/sh, assume a POSIX-compatible
@@ -93,19 +100,6 @@ set colorcolumn=+1
 " Numbers
 set number
 set numberwidth=5
-
-" set linenumbers on by default
-" When in insert mode, show linear numbers
-" When not in insert mode, show current line number with relative numbers
-" And last of all, only be relative in the buffer we're editing.
-
-au InsertLeave * set number
-au InsertLeave * set relativenumber
-
-au InsertLeave * set number
-au InsertEnter * set norelativenumber
-au BufLeave,FocusLost,WinLeave * set norelativenumber
-au BufEnter,FocusGained,WinEnter * set relativenumber
 
 " Switch between the last two files
 nnoremap <Leader><Leader> <c-^>
@@ -160,7 +154,9 @@ let g:airline#extensions#bufferline#enabled = 1
 " Airline theme
 let g:airline_theme='nova'
 
+" Deoplete stuff
 let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
 
 " UltiSnips configuration.
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -189,3 +185,18 @@ let g:NERDCommentEmptyLines = 1
 
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE (thanks Gary Bernhardt)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <Leader>rn :call RenameFile()<cr>
+
