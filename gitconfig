@@ -24,3 +24,5 @@
   name= Alexander Katulskiy
   email= alexxty7@gmail.com
   signingkey = Alex Katulskiy <alexxty7@gmail.com>
+[diff]
+  colorMoved = zebra

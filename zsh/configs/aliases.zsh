@@ -19,3 +19,4 @@ alias path='echo $PATH | tr -s ":" "\n"'
 
 # Refer neovim as vi
 alias ni='nvim'
+alias gco='git checkout $(git branch | fzf)'

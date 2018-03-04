@@ -92,7 +92,6 @@ augroup vimrcEx
     \ endif
 
   " Set syntax highlighting for specific file types
-  autocmd BufRead,BufNewFile Appraisals set filetype=ruby
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 
@@ -185,12 +184,6 @@ set diffopt+=vertical
 
 let g:jsx_ext_required = 0
 
-" Airline Stuff
-let g:airline#extensions#bufferline#enabled = 1
-
-" Airline theme
-let g:airline_theme='nova'
-
 " Deoplete stuff
 let g:deoplete#enable_at_startup = 1
 set completeopt-=preview
@@ -268,7 +261,6 @@ command! Gbranch call fzf#run(
       \})
 
 " Custom leader key map
-" let g:ctrlp_map = '<Leader>pf'
 nnoremap <Leader>pf :call FzfOmniFiles()<CR>
 nnoremap <Leader>bb :Buffers<CR>
 nnoremap <Leader>ft :NERDTreeToggle<CR>
