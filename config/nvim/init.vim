@@ -48,7 +48,6 @@ call minpac#add('othree/html5.vim')
 call minpac#add('hail2u/vim-css3-syntax')
 call minpac#add('mxw/vim-jsx')
 
-call minpac#add('ctrlpvim/ctrlp.vim')
 call minpac#add('janko-m/vim-test')
 call minpac#add('pbrisbin/vim-mkdir')
 call minpac#add('scrooloose/nerdcommenter')
@@ -73,6 +72,8 @@ call minpac#add('zchee/deoplete-jedi')
 call minpac#add('wincent/loupe')
 call minpac#add('wincent/ferret')
 call minpac#add('chriskempson/base16-vim')
+call minpac#add('junegunn/fzf')
+call minpac#add('junegunn/fzf.vim')
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -130,20 +131,8 @@ set list listchars=tab:»·,trail:·,nbsp:·
 " Use one space, not two, after punctuation.
 set nojoinspaces
 
-" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-
-  " Prefer `ag` over `rg`.
-  let g:FerretExecutable='ag,rg'
-endif
+" Prefer `ag` over `rg`.
+let g:FerretExecutable='ag,rg'
 
 " Make it obvious where 80 characters is
 set textwidth=80
@@ -195,8 +184,6 @@ set complete+=kspell
 set diffopt+=vertical
 
 let g:jsx_ext_required = 0
-
-map <C-n> :NERDTreeToggle<CR>
 
 " Airline Stuff
 let g:airline#extensions#bufferline#enabled = 1
@@ -251,3 +238,39 @@ function! RenameFile()
   endif
 endfunction
 map <Leader>rn :call RenameFile()<cr>
+
+" Fzf stuff
+fun! FzfOmniFiles()
+  let is_git = system('git status')
+  if v:shell_error
+    :Files
+  else
+    :GitFiles
+  endif
+endfun
+
+fun! s:change_branch(e)
+  let res = system("git checkout " . a:e)
+  :e!
+  :AirlineRefresh
+  echom "Changed branch to" . a:e
+endfun
+
+let g:fzf_files_options =
+  \ '--preview "(coderay {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+
+command! Gbranch call fzf#run(
+      \ {
+      \ 'source': 'git branch',
+      \ 'sink': function('<sid>change_branch'),
+      \ 'options': '-m',
+      \ 'down': '20%'
+      \})
+
+" Custom leader key map
+" let g:ctrlp_map = '<Leader>pf'
+nnoremap <Leader>pf :call FzfOmniFiles()<CR>
+nnoremap <Leader>bb :Buffers<CR>
+nnoremap <Leader>ft :NERDTreeToggle<CR>
+nnoremap <Leader>ff :BLines<CR>
+noremap <Leader>fs :update<CR>
