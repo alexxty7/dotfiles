@@ -18,9 +18,61 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-endif
+packadd minpac
+
+call minpac#init()
+
+" minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
+call minpac#add('k-takata/minpac', {'type': 'opt'})
+call minpac#add('w0rp/ale')
+call minpac#add('christoomey/vim-run-interactive')
+call minpac#add('christoomey/vim-tmux-navigator')
+call minpac#add('christoomey/vim-tmux-runner')
+call minpac#add('tpope/vim-endwise')
+call minpac#add('tpope/vim-eunuch')
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('tpope/vim-projectionist')
+call minpac#add('tpope/vim-rails')
+call minpac#add('tpope/vim-rake')
+call minpac#add('tpope/vim-repeat')
+call minpac#add('tpope/vim-rhubarb')
+call minpac#add('tpope/vim-surround')
+
+call minpac#add('elixir-lang/vim-elixir')
+call minpac#add('kchmck/vim-coffee-script')
+call minpac#add('pangloss/vim-javascript')
+call minpac#add('slim-template/vim-slim')
+call minpac#add('vim-ruby/vim-ruby')
+call minpac#add('othree/javascript-libraries-syntax.vim')
+call minpac#add('othree/html5.vim')
+call minpac#add('hail2u/vim-css3-syntax')
+call minpac#add('mxw/vim-jsx')
+
+call minpac#add('ctrlpvim/ctrlp.vim')
+call minpac#add('janko-m/vim-test')
+call minpac#add('pbrisbin/vim-mkdir')
+call minpac#add('scrooloose/nerdcommenter')
+call minpac#add('vim-airline/vim-airline')
+call minpac#add('vim-airline/vim-airline-themes')
+call minpac#add('airblade/vim-gitgutter')
+call minpac#add('scrooloose/nerdtree')
+call minpac#add('mhinz/vim-startify')
+call minpac#add('bling/vim-bufferline')
+
+call minpac#add('ervandew/supertab')
+call minpac#add('jiangmiao/auto-pairs')
+call minpac#add('alvan/vim-closetag')
+call minpac#add('mattn/emmet-vim')
+
+call minpac#add('SirVer/ultisnips')
+call minpac#add('honza/vim-snippets')
+
+call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
+call minpac#add('zchee/deoplete-jedi')
+
+call minpac#add('wincent/loupe')
+call minpac#add('wincent/ferret')
+call minpac#add('chriskempson/base16-vim')
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -147,8 +199,6 @@ let g:jsx_ext_required = 0
 map <C-n> :NERDTreeToggle<CR>
 
 " Airline Stuff
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#bufferline#enabled = 1
 
 " Airline theme
@@ -168,7 +218,9 @@ command! PackUpdate call minpac#update()
 command! PackClean call minpac#clean()
 
 " Color schema
-colorscheme nova
+colorscheme base16-tomorrow-night
+set termguicolors
+set cursorline
 
 " NerdCommenter configs
 " Add spaces after comment delimiters by default
@@ -199,4 +251,3 @@ function! RenameFile()
   endif
 endfunction
 map <Leader>rn :call RenameFile()<cr>
-
